@@ -1,11 +1,11 @@
 import { Injectable, OnModuleInit, OnModuleDestroy } from '@nestjs/common';
-import { Database, open } from 'sqlite';
-import sqlite3 from 'sqlite3';
-import { Repository } from './repository.interface';
+import { open } from 'sqlite';
+import * as sqlite3 from 'sqlite3';  // Import sqlite3 correctly
+import { BaseRepository } from '../../repository.interface';
 
 @Injectable()
-export class SQLiteRepository<T> implements Repository<T>, OnModuleInit, OnModuleDestroy {
-  private db?: Database;
+export class SQLiteRepository<T> implements BaseRepository<T>, OnModuleInit, OnModuleDestroy {
+  private db?;
   private readonly tableName: string;
 
   constructor(tableName: string) {
@@ -16,7 +16,7 @@ export class SQLiteRepository<T> implements Repository<T>, OnModuleInit, OnModul
   async onModuleInit() {
     this.db = await open({
       filename: './database.db', // Path to your SQLite database file
-      driver: sqlite3.Database, // SQLite driver
+      driver:sqlite3.Database,  
     });
     console.log(`Connected to SQLite database`);
   }
@@ -48,16 +48,22 @@ export class SQLiteRepository<T> implements Repository<T>, OnModuleInit, OnModul
     return this.runQuery(query, values);
   }
 
-  async find(query: object): Promise<T[]> {
-    const whereClause = Object.entries(query)
-      .map(([key, value]) => `${key} = ?`)
-      .join(' AND ');
-
-    const params = Object.values(query);
-    const sqlQuery = `SELECT * FROM ${this.tableName} WHERE ${whereClause}`;
-
-    return this.getRows(sqlQuery, params);
+async find(query: object): Promise<T[]> {
+  // If query is empty, return all rows without a WHERE clause
+  if (Object.keys(query).length === 0) {
+    const sqlQuery = `SELECT * FROM ${this.tableName}`;
+    return this.getRows(sqlQuery); // Get all rows from the table
   }
+
+  const whereClause = Object.entries(query)
+    .map(([key, value]) => `${key} = ?`)
+    .join(' AND ');
+
+  const params = Object.values(query);
+  const sqlQuery = `SELECT * FROM ${this.tableName} WHERE ${whereClause}`;
+
+  return this.getRows(sqlQuery, params);
+}
 
   async findOne(query: object): Promise<T | null> {
     const whereClause = Object.entries(query)

@@ -1,4 +1,4 @@
-export interface Repository<T> {
+export interface BaseRepository<T> {
   create(data: T): Promise<any>;
   find(query: object): Promise<T[]>;
   findOne(query: object): Promise<T | null>;

@@ -1,15 +1,15 @@
 import { Injectable, OnModuleDestroy, OnModuleInit } from '@nestjs/common';
 import { MongoClient, Db, Collection, OptionalUnlessRequiredId, WithId } from 'mongodb';
-import { Repository } from './repository.interface';
+import { BaseRepository } from '../../repository.interface';
 @Injectable()
-export class MongoDBRepository<T> implements Repository<T>,OnModuleInit,OnModuleDestroy  {
+export class MongoDBRepository<T> implements BaseRepository<T>,OnModuleInit,OnModuleDestroy  {
   private client: MongoClient;
   private db: Db;
   private readonly collectionName: string;
-  constructor(collectionName: string) {
+  constructor(collectionName) {
     // this.client = new MongoClient('mongodb://localhost:27017');
     // this.db = this.client.db('Axisbank');
-    this.collectionName = collectionName;
+    this.collectionName = collectionName
   }
 
   async onModuleInit() {
@@ -20,7 +20,6 @@ export class MongoDBRepository<T> implements Repository<T>,OnModuleInit,OnModule
       console.log('Connected to MongoDB');
     }
   }
-
   // Close the database connection when the module is destroyed
   async onModuleDestroy() {
     if (this.client) {
