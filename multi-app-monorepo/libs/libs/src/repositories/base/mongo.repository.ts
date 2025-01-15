@@ -14,9 +14,9 @@ export class MongoDBRepository<T> implements BaseRepository<T>,OnModuleInit,OnMo
 
   async onModuleInit() {
     if (!this.client) {
-      this.client = new MongoClient('mongodb://localhost:27017');
+      this.client = new MongoClient(process.env.url);
       await this.client.connect();
-      this.db = this.client.db('Axisbank');
+      this.db = this.client.db(process.env.db_name);
       console.log('Connected to MongoDB');
     }
   }
