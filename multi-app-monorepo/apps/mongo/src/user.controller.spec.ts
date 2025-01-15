@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { MongoController } from './mongo.controller';
-import { MongoService } from './mongo.service';
+import { MongoController } from './user.controller';
+import { MongoService } from './user.service';
 
 describe('MongoController', () => {
   let mongoController: MongoController;

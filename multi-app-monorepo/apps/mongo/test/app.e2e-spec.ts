@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';
 import * as request from 'supertest';
-import { MongoModule } from './../src/mongo.module';
+import { MongoModule } from '../src/user.module';
 
 describe('MongoController (e2e)', () => {
   let app: INestApplication;

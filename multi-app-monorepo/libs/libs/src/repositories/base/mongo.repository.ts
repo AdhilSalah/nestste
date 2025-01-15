@@ -46,7 +46,7 @@ export class MongoDBRepository<T> implements BaseRepository<T>,OnModuleInit,OnMo
 
   async find(query: object): Promise<T[]> {
     const results = await this.getCollection().find(query).toArray();
-    return results.map(({ _id, ...rest }) => ({ ...rest }) as T); // Transform
+    return results.map(({...rest }) => ({ ...rest }) as T); // Transform
   }
 
   async findOne(query: object): Promise<T | null> {

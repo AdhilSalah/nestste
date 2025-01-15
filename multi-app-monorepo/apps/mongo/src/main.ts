@@ -1,5 +1,5 @@
 import { NestFactory } from '@nestjs/core';
-import { MongoModule } from './mongo.module';
+import { MongoModule } from './user.module';
 
 async function bootstrap() {
   const app = await NestFactory.create(MongoModule);
